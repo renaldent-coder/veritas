@@ -1,29 +1,21 @@
-"""
-Django settings for Veritas Asset Recovery.
-Configured for PythonAnywhere + MySQL + Cloudflare R2 + CORS + JWT.
-"""
-
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-your-secret-key-here')
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError("DJANGO_SECRET_KEY environment variable is not set")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DEBUG', 'True') == 'True'
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost,*.pythonanywhere.com,veritas-asset-recovery.netlify.app').split(',')
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
-# Application definition
 INSTALLED_APPS = [
-    # Django built-in
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -31,22 +23,27 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     
-    # Third-party apps
+    # Third-party
     'rest_framework',
     'rest_framework.authtoken',
     'corsheaders',
-    'storages',  # For Cloudflare R2 / S3
+    'storages',
     'django_filters',
+    'whitenoise.runserver_nostatic',  # 👈 ADDED
     
-    # Custom apps
+    
+    
+    
     'apps.accounts',
     'apps.cases',
     'apps.api',
 ]
 
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'corsheaders.middleware.CorsMiddleware',  # CORS must be near the top
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # 👈 ADDED
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,30 +72,23 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'veritas_backend.wsgi.application'
 
-# Database - MySQL on PythonAnywhere (or local SQLite for development)
-if os.getenv('PYTHONANYWHERE_DOMAIN'):  # Running on PythonAnywhere
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': os.getenv('DB_NAME'),
-            'USER': os.getenv('DB_USER'),
-            'PASSWORD': os.getenv('DB_PASSWORD'),
-            'HOST': os.getenv('DB_HOST', 'mysql.server'),
-            'PORT': os.getenv('DB_PORT', '3306'),
-            'OPTIONS': {
-                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-            },
-        }
-    }
-else:  # Local development
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-    }
+# ========== DATABASE (Supabase PostgreSQL) ==========
+DATABASE_URL = os.getenv('DATABASE_URL')
+if not DATABASE_URL:
+    raise ValueError("DATABASE_URL environment variable is not set")
 
-# Password validation
+DATABASES = {
+    'default': dj_database_url.config(
+        default=DATABASE_URL,
+        conn_max_age=600,
+        conn_health_checks=True,
+    )
+}
+
+# ========== AUTH ==========
+AUTH_USER_MODEL = 'accounts.Client'
+
+# ========== PASSWORD VALIDATION ==========
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -106,53 +96,26 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# Internationalization
+# ========== INTERNATIONALIZATION ==========
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
+# ========== STATIC FILES ==========
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'  # 👈 ADDED
 
-# Media files (User uploads) - Cloudflare R2
-if os.getenv('USE_R2') == 'True':
-    # Cloudflare R2 Configuration
-    AWS_ACCESS_KEY_ID = os.getenv('R2_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('R2_SECRET_ACCESS_KEY')
-    AWS_STORAGE_BUCKET_NAME = os.getenv('R2_BUCKET_NAME')
-    AWS_S3_ENDPOINT_URL = os.getenv('R2_ENDPOINT_URL')
-    AWS_S3_REGION_NAME = os.getenv('R2_REGION', 'auto')
-    AWS_S3_CUSTOM_DOMAIN = os.getenv('R2_CUSTOM_DOMAIN')
-    
-    # Storage settings
-    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
-    AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
-    }
-    AWS_QUERYSTRING_AUTH = False  # Make files publicly readable
-    AWS_S3_FILE_OVERWRITE = False
-    AWS_S3_SIGNATURE_VERSION = 's3v4'
-    
-    # Media URL
-    if AWS_S3_CUSTOM_DOMAIN:
-        MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
-    else:
-        MEDIA_URL = f'{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/'
-else:
-    # Local file storage (development)
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# ========== MEDIA FILES ==========
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Default primary key field type
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# CORS Configuration
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173,https://veritas-asset-recovery.netlify.app').split(',')
+# ========== CORS ==========
+CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', 'http://localhost:5173,http://127.0.0.1:5173').split(',')
 CORS_ALLOW_CREDENTIALS = True
 
-# REST Framework Configuration
+# ========== REST FRAMEWORK ==========
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -164,13 +127,17 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
-    'EXCEPTION_HANDLER': 'apps.api.utils.custom_exception_handler',
 }
 
-# Custom User Model (optional - we'll use Django's built-in User)
-AUTH_USER_MODEL = 'accounts.Client'
+# ========== TELEGRAM ==========
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
+ADMIN_BASE_URL = os.getenv('ADMIN_BASE_URL', 'https://veritas.onrender.com')
 
-# Email Configuration (for registration verification)
+# ========== FRONTEND ==========
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'https://veritas-asset-recovery.netlify.app')
+
+# ========== EMAIL (optional) ==========
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = int(os.getenv('EMAIL_PORT', 587))
@@ -179,30 +146,5 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = f'Veritas Asset Recovery <{EMAIL_HOST_USER}>'
 
-# JWT / Token settings (we use DRF's built-in Token)
-# For simplicity, we'll use DRF Tokens with expiration via a custom middleware later
-
-# Logging
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-        },
-    },
-    'root': {
-        'handlers': ['console'],
-        'level': 'INFO',
-    },
-}
-# ===== TELEGRAM CONFIGURATION =====
-TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-TELEGRAM_CHAT_ID = os.getenv('TELEGRAM_CHAT_ID')
-ADMIN_BASE_URL = os.getenv('ADMIN_BASE_URL', 'https://veritas.pythonanywhere.com')  # Your live admin URL
-
-# Validate Telegram settings (will log a warning if missing)
-if not TELEGRAM_BOT_TOKEN:
-    print("⚠️ WARNING: TELEGRAM_BOT_TOKEN not set. Telegram alerts will not work.")
-if not TELEGRAM_CHAT_ID:
-    print("⚠️ WARNING: TELEGRAM_CHAT_ID not set. Telegram alerts will not work.")
+# ========== DEFAULT ==========
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
