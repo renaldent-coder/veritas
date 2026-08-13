@@ -1,0 +1,264 @@
+.homepage {
+  background: #0A1628;
+}
+
+.hero {
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  background: linear-gradient(135deg, #0A1628 0%, #1E2A45 100%);
+  border-bottom: 1px solid #1E2A45;
+}
+
+.hero-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: #D4AF37;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem;
+  color: #CCD6F6;
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.hero-stats {
+  margin-bottom: 2rem;
+}
+
+.stat-badge {
+  background: #1E2A45;
+  color: #D4AF37;
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 600;
+  border: 1px solid #D4AF37;
+}
+
+.hero-cta {
+  display: inline-block;
+  background: #D4AF37;
+  color: #0A1628;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 1rem 3rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.hero-cta:hover {
+  background: #FFE87C;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #D4AF37;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+/* Fee Estimator */
+.fee-estimator {
+  padding: 4rem 0;
+  background: #0A1628;
+}
+
+.estimator-box {
+  max-width: 600px;
+  margin: 0 auto;
+  background: #1E2A45;
+  padding: 2.5rem;
+  border-radius: 12px;
+  border: 1px solid #D4AF37;
+}
+
+.estimator-input-group {
+  margin-bottom: 2rem;
+}
+
+.estimator-input-group label {
+  display: block;
+  color: #CCD6F6;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.estimator-input {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.2rem;
+  background: #0A1628;
+  border: 2px solid #233554;
+  border-radius: 8px;
+  color: #CCD6F6;
+  transition: border-color 0.3s ease;
+}
+
+.estimator-input:focus {
+  outline: none;
+  border-color: #D4AF37;
+}
+
+.estimator-results {
+  border-top: 2px solid #233554;
+  padding-top: 1.5rem;
+}
+
+.result-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+}
+
+.amount-green {
+  color: #2ECC71;
+  font-weight: 700;
+}
+
+.amount-gold {
+  color: #D4AF37;
+  font-weight: 700;
+}
+
+/* How It Works */
+.how-it-works {
+  padding: 4rem 0;
+  background: #1E2A45;
+}
+
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 2rem;
+}
+
+.step-card {
+  background: #0A1628;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #233554;
+  transition: transform 0.3s ease;
+}
+
+.step-card:hover {
+  transform: translateY(-5px);
+}
+
+.step-number {
+  display: inline-block;
+  background: #D4AF37;
+  color: #0A1628;
+  width: 40px;
+  height: 40px;
+  line-height: 40px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.step-card h3 {
+  color: #D4AF37;
+  margin-bottom: 0.8rem;
+  font-size: 1.2rem;
+}
+
+.step-card p {
+  color: #8892B0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+/* Testimonials */
+.testimonials {
+  padding: 4rem 0;
+  background: #0A1628;
+}
+
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.testimonial-card {
+  background: #1E2A45;
+  padding: 2rem;
+  border-radius: 8px;
+  border-left: 4px solid #D4AF37;
+}
+
+.testimonial-card p {
+  font-style: italic;
+  color: #CCD6F6;
+  font-size: 1.05rem;
+  margin-bottom: 1rem;
+}
+
+.testimonial-card span {
+  color: #8892B0;
+  font-size: 0.9rem;
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: linear-gradient(135deg, #1E2A45 0%, #0A1628 100%);
+  border-top: 1px solid #D4AF37;
+}
+
+.cta-section h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.5rem;
+  color: #D4AF37;
+  margin-bottom: 1rem;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  color: #CCD6F6;
+  margin-bottom: 2rem;
+}
+
+.cta-button {
+  display: inline-block;
+  background: #D4AF37;
+  color: #0A1628;
+  font-weight: 700;
+  font-size: 1.2rem;
+  padding: 1rem 3rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #FFE87C;
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(212, 175, 55, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.5rem;
+  }
+  .section-title {
+    font-size: 2rem;
+  }
+}

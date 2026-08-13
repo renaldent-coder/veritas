@@ -1,0 +1,34 @@
+{
+  "header": {
+    "title": "Veritas Asset Recovery",
+    "tagline": "Verdad. Transparencia. Repatriación.",
+    "home": "Inicio",
+    "submit": "Enviar caso",
+    "dashboard": "Panel de control",
+    "contact": "Contacto",
+    "login": "Iniciar sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar sesión"
+  },
+  "home": {
+    "hero": {
+      "title": "No lo perdiste. Lo recuperaremos.",
+      "subtitle": "No pague nada a menos que tengamos éxito.",
+      "cta": "Comience su recuperación ahora",
+      "stats": "Más de $47.8 millones recuperados a nivel mundial"
+    }
+  },
+  "wizard": {
+    "step1": "Detalles de la pérdida",
+    "step1_title": "Cuéntanos qué pasó",
+    "loss_amount": "Monto total perdido (USD)",
+    "first_transaction": "Fecha de la primera transacción",
+    "last_transaction": "Fecha de la última transacción"
+  },
+  "contact": {
+    "title": "Chatea con nuestros especialistas en recuperación",
+    "subtitle": "¿Prefieres mensajería instantánea? Nuestro equipo está disponible en Telegram para casos urgentes.",
+    "button": "Chatea con nosotros en Telegram",
+    "disclaimer": "Por su seguridad, verifique que nuestro handle oficial de Telegram sea @Renaldeti. NUNCA le pediremos sus claves privadas, contraseñas de billetera o credenciales bancarias a través de Telegram. Toda la información sensible debe enviarse a través de nuestro portal seguro."
+  }
+}
