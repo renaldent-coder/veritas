@@ -2,9 +2,10 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.permissions import AllowAny  # 👈 ADD THIS
 from django.shortcuts import get_object_or_404
 from django.db import transaction
-from django.http import JsonResponse  # 👈 ADD THIS
+from django.http import JsonResponse
 
 from .serializers import (
     ClientRegistrationSerializer,
@@ -22,6 +23,7 @@ from .telegram import send_telegram_alert
 # ===== AUTHENTICATION =====
 
 @api_view(['POST'])
+@permission_classes([AllowAny])  # 👈 ADD THIS — makes registration public
 def register(request):
     """Client registration endpoint"""
     serializer = ClientRegistrationSerializer(data=request.data)
@@ -36,6 +38,7 @@ def register(request):
 
 
 @api_view(['POST'])
+@permission_classes([AllowAny])  # 👈 ADD THIS — makes login public
 def login(request):
     """Client login endpoint"""
     serializer = ClientLoginSerializer(data=request.data)
@@ -52,7 +55,7 @@ def login(request):
 @api_view(['GET'])
 @permission_classes([permissions.IsAuthenticated])
 def me(request):
-    """Get current user profile"""
+    """Get current user profile (requires authentication)"""
     serializer = ClientSerializer(request.user)
     return Response(serializer.data)
 
@@ -62,7 +65,7 @@ def me(request):
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
 def create_case(request):
-    """Create a new case"""
+    """Create a new case (requires authentication)"""
     serializer = CaseSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
         with transaction.atomic():
@@ -119,7 +122,7 @@ def upload_documents(request, case_id):
             case=case,
             document_type='OTHER',
             file_name=file.name,
-            file_url=f'/media/{file.name}',  # Placeholder for local dev
+            file_url=f'/media/{file.name}',
             file_size=file.size,
             uploaded_by=request.user
         )
@@ -144,5 +147,5 @@ def add_internal_note(request, case_id):
 # ===== HEALTH CHECK =====
 
 def health_check(request):
-    """Simple health check endpoint using JsonResponse (no DRF dependency)"""
+    """Simple health check endpoint (public)"""
     return JsonResponse({'status': 'ok', 'message': 'Veritas Asset Recovery API is running'})
