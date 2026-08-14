@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
+from django.utils import timezone  # 👈 ADDED — fixes the 500 error
 from .models import Case, Document, InternalNote, ClientCommunication, AuditLog
 
 
@@ -118,7 +119,7 @@ class CaseAdmin(admin.ModelAdmin):
         """Admin action: Mark selected cases as recovered"""
         for case in queryset:
             case.status = 'RECOVERED'
-            case.recovery_completed_at = timezone.now()
+            case.recovery_completed_at = timezone.now()  # 👈 Uses timezone
             if case.recovery_amount:
                 case.calculate_fee()
             case.save()
