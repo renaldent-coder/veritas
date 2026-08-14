@@ -16,7 +16,7 @@ class ClientAdmin(UserAdmin):
         'date_joined',
         'is_active',
         'email_verified',
-        'case_count',
+        #'case_count',
     ]
     
     list_filter = [
