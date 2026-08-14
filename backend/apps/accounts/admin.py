@@ -7,8 +7,6 @@ from .models import Client
 
 @admin.register(Client)
 class ClientAdmin(UserAdmin):
-    """Custom admin for Client model with Navy/Gold styling"""
-    
     list_display = [
         'email',
         'full_name',
@@ -16,7 +14,7 @@ class ClientAdmin(UserAdmin):
         'date_joined',
         'is_active',
         'email_verified',
-        #'case_count',
+        # 'case_count',  # Temporarily removed
     ]
     
     list_filter = [
@@ -38,7 +36,6 @@ class ClientAdmin(UserAdmin):
         'id',
         'date_joined',
         'last_active',
-        'case_count_display',
     ]
     
     fieldsets = (
@@ -50,10 +47,6 @@ class ClientAdmin(UserAdmin):
         }),
         ('Legal Agreements', {
             'fields': ('agreed_to_terms', 'agreed_to_nda', 'agreed_to_fee_structure')
-        }),
-        ('Verification', {
-            'fields': ('verification_token', 'verification_token_created', 'reset_token', 'reset_token_created'),
-            'classes': ('collapse',)
         }),
         ('Permissions', {
             'fields': ('groups', 'user_permissions'),
@@ -70,13 +63,3 @@ class ClientAdmin(UserAdmin):
     def full_name(self, obj):
         return obj.get_full_name()
     full_name.short_description = 'Full Name'
-    
-    def case_count(self, obj):
-        count = obj.cases.count()
-        url = reverse('admin:cases_case_changelist') + f'?client__id__exact={obj.id}'
-        return format_html('<a href="{}" style="color: #D4AF37;">{} case(s)</a>', url, count)
-    case_count.short_description = 'Cases'
-    
-    def case_count_display(self, obj):
-        return obj.cases.count()
-    case_count_display.short_description = 'Total Cases'
