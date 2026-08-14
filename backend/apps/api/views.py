@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.http import JsonResponse  # 👈 ADD THIS
 
 from .serializers import (
     ClientRegistrationSerializer,
@@ -114,10 +115,6 @@ def upload_documents(request, case_id):
     
     created_docs = []
     for file in files:
-        # Note: File is already uploaded by frontend.
-        # We just store the record with the URL.
-        # In production with Cloudflare R2, you would generate a presigned URL here.
-        # For local testing, we'll store a placeholder URL.
         doc = Document.objects.create(
             case=case,
             document_type='OTHER',
@@ -146,7 +143,6 @@ def add_internal_note(request, case_id):
 
 # ===== HEALTH CHECK =====
 
-@api_view(['GET'])
 def health_check(request):
-    """Simple health check endpoint"""
-    return Response({'status': 'ok', 'message': 'Veritas Asset Recovery API is running'})
+    """Simple health check endpoint using JsonResponse (no DRF dependency)"""
+    return JsonResponse({'status': 'ok', 'message': 'Veritas Asset Recovery API is running'})
