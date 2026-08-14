@@ -95,7 +95,7 @@ DATABASES = {
 }
 
 # ========== AUTH ==========
-AUTH_USER_MODEL = 'apps.accounts.Client'
+AUTH_USER_MODEL = 'accounts.Client'
 
 # ========== PASSWORD VALIDATION ==========
 AUTH_PASSWORD_VALIDATORS = [
