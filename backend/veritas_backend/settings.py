@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 if not SECRET_KEY:
     raise ValueError("DJANGO_SECRET_KEY environment variable is not set")
@@ -95,7 +95,7 @@ DATABASES = {
 }
 
 # ========== AUTH ==========
-AUTH_USER_MODEL = 'accounts.Client'
+AUTH_USER_MODEL = 'apps.accounts.Client'
 
 # ========== PASSWORD VALIDATION ==========
 AUTH_PASSWORD_VALIDATORS = [
