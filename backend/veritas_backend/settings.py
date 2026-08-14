@@ -15,7 +15,14 @@ if not SECRET_KEY:
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    '.onrender.com',  # Allows any *.onrender.com domain
+    'localhost',
+    '127.0.0.1',
+]
+CSRF_TRUSTED_ORIGINS = [
+    'https://veritas-jsqt.onrender.com',
+]
 
 INSTALLED_APPS = [
     'django.contrib.admin',

@@ -27,6 +27,11 @@ class Settings(ABC):
     def allowed_hosts(self):
         raise NotImplementedError
 
+    @property
+    @abstractmethod
+    def csrf_trusted_origins(self):
+        raise NotImplementedError
+
     def as_dict(self):
         return {
             'DEBUG': self.debug,
